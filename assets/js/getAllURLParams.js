@@ -81,8 +81,8 @@ function ajaxCall(param) {
 }
 
 function parseURL() {
-  if (getAllUrlParams().pet != undefined) {
-    populatePage(getAllUrlParams().pet, false);
+  if (getAllUrlParams().dog != undefined) {
+    populatePage(getAllUrlParams().dog, false);
   } else {
     populatePage(getAllUrlParams().page, true);
   }
@@ -107,20 +107,42 @@ function populatePage(urlInput, homePage) {
         <p>Details: ${response.pets[urlInput].details}</p>
         `);
 
-        $("#image1").html(`<img src="${response.pets[urlInput].image1}" width="100%" height="225" alt="dog">`)
-        $("#image2").html(`<img src="${response.pets[urlInput].image2}" width="100%" height="225" alt="dog">`)
-        $("#image3").html(`<img src="${response.pets[urlInput].image3}" width="100%" height="225" alt="dog">`)
-      } else if (homePage == true) {
-        if (urlInput != undefined) {
-          alert("on new page: " + urlInput);
-          var dogStart = (urlInput * 6) - 6;
+        $("#image1").html(`<img src="${response.pets[urlInput].image1}" width="100%" height="225" alt="picture of dog">`);
+        $("#image2").html(`<img src="${response.pets[urlInput].image2}" width="100%" height="225" alt="picture of dog">`);
+        $("#image3").html(`<img src="${response.pets[urlInput].image3}" width="100%" height="225" alt="picture of dog">`);
+      } else if (homePage == true ) {
+        if (urlInput > 1) {
+          var dog = (urlInput * 6) - 6;
           for (let i = 0; i < 6; i++) {
-            console.log(dogStart);
-            dogStart++;
+            $(`#image${i+1}`).html(`<img src="${response.pets[dog].image1}" width="100%" height="225" alt="image of dog">`);
+            $(`#dog${i+1}Data`).html(`
+            <p>Name: ${response.pets[dog].name}</p>
+            <p>Breed: ${response.pets[dog].breed}</p>
+            <p>Gender: ${response.pets[dog].sex}</p>
+            <p>Age: ${response.pets[dog].age}</p>
+            `);
+            
+            $(`#detailButton${i+1}`).html(`<button type="button" onclick="location.href = './detail.html?dog=${dog}'" class="btn btn-sm btn-outline-secondary">View</button>`);
+
+            $("#backButton").html(`<button onclick="location.href = 'index.html?page=${parseInt(urlInput)-1}'" class="float-start mb-1">Back</button>`);
+            $("#nextButton").html(`<button onclick="location.href = 'index.html?page=${parseInt(urlInput)+1}'" class="float-start mb-1">Next</button>`);
+
+            dog++;
           }
         } else {
           for (let i = 0; i < 6; i++) {
-            console.log(i);
+            $(`#image${i+1}`).html(`<img src="${response.pets[i].image1}" width="100%" height="225" alt="image of dog">`);
+            $(`#dog${i+1}Data`).html(`
+            <p>Name: ${response.pets[i].name}</p>
+            <p>Breed: ${response.pets[i].breed}</p>
+            <p>Gender: ${response.pets[i].sex}</p>
+            <p>Age: ${response.pets[i].age}</p>
+            `);
+
+            $(`#detailButton${i+1}`).html(`<button type="button" onclick="location.href = './detail.html?dog=${i}'" class="btn btn-sm btn-outline-secondary">View</button>`);
+
+            $("#backButton").html("");
+            $("#nextButton").html(`<button onclick="location.href = 'index.html?page=2'" class="float-start mb-1">Next</button>`);
           }
         }
       }
@@ -130,11 +152,4 @@ function populatePage(urlInput, homePage) {
 
 $(document).ready(function () {
   parseURL();
-  $("#nextButton").click(function (e) { 
-    console.log("click");
-    location.href = "./index.html?page=" + 2;
-  });
-  $("[id^=dog]").click(function (e) {
-    location.href = "./detail.html?dog=" + 0;
-  });
 });
