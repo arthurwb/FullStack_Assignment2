@@ -70,6 +70,22 @@ function getAllUrlParams(url){
   return obj;
 }
 
+function randomDogImage(index, home) {
+  $.ajax({
+    url: "https://random.dog/doggos",
+    dataType: "json",
+    success: function (response) {
+      if (home) {
+        $(`#image${index+1}`).html(`<img src="${"https://random.dog/" + response[Math.floor(Math.random() * 1000)]}" width="100%" height="225" alt="image of dog">`);
+      } else {
+        $("#image1").html(`<img src="${"https://random.dog/" + response[Math.floor(Math.random() * 1000)]}" width="100%" height="225" alt="picture of dog">`);
+        $("#image2").html(`<img src="${"https://random.dog/" + response[Math.floor(Math.random() * 1000)]}" width="100%" height="225" alt="picture of dog">`);
+        $("#image3").html(`<img src="${"https://random.dog/" + response[Math.floor(Math.random() * 1000)]}" width="100%" height="225" alt="picture of dog">`);
+      }
+    }
+  });
+}
+
 function parseURL() {
   if (getAllUrlParams().dog != undefined) {
     populatePage(getAllUrlParams().dog, false);
@@ -97,14 +113,18 @@ function populatePage(urlInput, homePage) {
         <p>Details: ${response.pets[urlInput].details}</p>
         `);
 
-        $("#image1").html(`<img src="${response.pets[urlInput].image1}" width="100%" height="225" alt="picture of dog">`);
-        $("#image2").html(`<img src="${response.pets[urlInput].image2}" width="100%" height="225" alt="picture of dog">`);
-        $("#image3").html(`<img src="${response.pets[urlInput].image3}" width="100%" height="225" alt="picture of dog">`);
+        randomDogImage();
+        // $("#image1").html(`<img src="${response.pets[urlInput].image1}" width="100%" height="225" alt="picture of dog">`);
+        // $("#image2").html(`<img src="${response.pets[urlInput].image2}" width="100%" height="225" alt="picture of dog">`);
+        // $("#image3").html(`<img src="${response.pets[urlInput].image3}" width="100%" height="225" alt="picture of dog">`);
       } else if (homePage == true ) {
+        var dog = 0;
         if (urlInput > 1) {
-          var dog = (urlInput * 6) - 6;
+          dog = (urlInput * 6) - 6;
           for (let i = 0; i < 6; i++) {
-            $(`#image${i+1}`).html(`<img src="${response.pets[dog].image1}" width="100%" height="225" alt="image of dog">`);
+            randomDogImage(i, true);
+            //$(`#image${i+1}`).html(`<img src="${response.pets[dog].image1}" width="100%" height="225" alt="image of dog">`);
+            
             $(`#dog${i+1}Data`).html(`
             <p>Name: ${response.pets[dog].name}</p>
             <p>Breed: ${response.pets[dog].breed}</p>
@@ -121,7 +141,9 @@ function populatePage(urlInput, homePage) {
           }
         } else {
           for (let i = 0; i < 6; i++) {
-            $(`#image${i+1}`).html(`<img src="${response.pets[i].image1}" width="100%" height="225" alt="image of dog">`);
+            randomDogImage(i, true);
+            //$(`#image${i+1}`).html(`<img src="${response.pets[i].image1}" width="100%" height="225" alt="image of dog">`);
+            
             $(`#dog${i+1}Data`).html(`
             <p>Name: ${response.pets[i].name}</p>
             <p>Breed: ${response.pets[i].breed}</p>
